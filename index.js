@@ -18,7 +18,7 @@ app.get(
   (req, res) =>
     deviceService.getDevices()
       .then((devices) => res.json(devices))
-      .catch(error(500 /* Server Error */, res))
+      .catch(error(500, res)) // Internal Server Error
 )
 
 app.get(
@@ -27,13 +27,13 @@ app.get(
     deviceService.getDevice(req.params.mac)
       .then((device) => {
         if (!device) {
-          return res.status(404 /* Not Found */)
+          return res.status(404) // Not Found
             .end()
         }
 
         res.json(device)
       })
-      .catch(error(500 /* Server Error */, res))
+      .catch(error(500, res)) // Internal Server Error
 )
 
 app.put(
@@ -42,16 +42,16 @@ app.put(
     deviceService.getDevice(req.params.mac)
       .then((device) => {
         if (!req.body.profile) {
-          return res.status(400 /* Bad Request */)
+          return res.status(400) // Bad Request
             .end()
         }
 
         return deviceService.setDeviceProfile(device, req.body.profile)
       })
       .then(() =>
-        res.status(204 /* No Content */).end()
+        res.status(204).end() // No Content
       )
-      .catch(error(400 /* Bad Request */, res))
+      .catch(error(400, res)) // Bad Request
 
 )
 
