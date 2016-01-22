@@ -63,4 +63,10 @@ app.put(
 
 )
 
+app.get(
+  '/profiles',
+  (req, res) =>
+    res.json(profileService.getProfiles())
+)
+
 app.listen(PORT)

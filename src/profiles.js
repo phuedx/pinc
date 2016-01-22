@@ -51,9 +51,14 @@ function createProfileService (profilesFile) {
     })
   }
 
+  function getProfiles () {
+    return profiles
+  }
+
   return {
     getProfile,
-    setProfile
+    setProfile,
+    getProfiles
   }
 }
 
