@@ -1,15 +1,13 @@
 'use strict'
 
-const profileService = require('./profiles')
-
-function createDevice (client) {
-  return {
-    dhcp: client,
-    profile: profileService.getProfile(client.ip)
+function createDeviceService (dhcpService, profileService) {
+  function createDevice (client) {
+    return {
+      dhcp: client,
+      profile: profileService.getProfile(client.ip)
+    }
   }
-}
 
-function createDeviceService (dhcpService) {
   function getDevices () {
     return dhcpService.getActiveClients()
       .then((clients) => clients.map(createDevice))

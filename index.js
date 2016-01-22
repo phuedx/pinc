@@ -1,15 +1,18 @@
 'use strict'
 
 const CLIENT_LEASES_FILE = process.env.CLIENT_LEASES_FILE || '/var/lib/dhcp/dhcpd.leases'
+const PROFILES_FILE = `${__dirname}/profiles.json`
 const PORT = process.env.PORT || 8080
 
 const express = require('express')
 const bodyParser = require('body-parser')
 const createDhcpService = require('./src/dhcp')
+const createProfileService = require('./src/profiles')
 const createDeviceService = require('./src/devices')
 
 const dhcpService = createDhcpService(CLIENT_LEASES_FILE)
-const deviceService = createDeviceService(dhcpService)
+const profileService = createProfileService(PROFILES_FILE)
+const deviceService = createDeviceService(dhcpService, profileService)
 
 const app = express()
 

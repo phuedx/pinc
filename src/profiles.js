@@ -1,48 +1,60 @@
 'use strict'
 
+const readFileSync = require('fs').readFileSync
 const Promise = require('bluebird')
 const exec = require('child_process').exec
 
-const NONE = 'none'
-const PROFILES = {
-  'GPRS': '1:3',
-  'Regular 2G': '1:4',
-  'Good 2G': '1:5',
-  'Regular 3G': '1:6',
-  'Good 3G': '1:7',
-  'Regular 4G': '1:8'
-}
+const NONE = 'None'
 
-let profiles = {}
+// The root qdisc is a PRIO classful qdisc with three default bands and six bands for the network
+// throttling profiles. By basing the "flow ID" at three, we ignore the three default bands.
+const BASE_FLOW_ID = 3
 
-function getProfile (ip) {
-  return profiles[ip] || NONE
-}
+function createProfileService (profilesFile) {
+  const profiles = JSON.parse(readFileSync(profilesFile))
+  let profileCache = {}
 
-function setProfile (ip, profile) {
-  return new Promise((resolve, reject) => {
-    const flowID = PROFILES[profile]
+  function getProfile (ip) {
+    return profileCache[ip] || NONE
+  }
 
-    if (!flowID) {
-      return reject(new Error(`The profile "${profile}" isn't defined.`))
+  function getFlowID (profile) {
+    for (let i = 0; i < profiles.length; ++i) {
+      if (profiles[i].name === profile) {
+        return i + BASE_FLOW_ID
+      }
     }
 
-    exec(
-      `sudo tc filter add dev wlan0 protocol ip parent 1: prio 3 u32 match ip dst ${ip}/32 flowid ${flowID}`,
-      (err) => {
-        if (err) {
-          return reject(err)
-        }
+    return null
+  }
 
-        profiles[ip] = profile
+  function setProfile (ip, profile) {
+    return new Promise((resolve, reject) => {
+      const flowID = getFlowID(profile)
 
-        resolve()
+      if (flowID === null) {
+        return reject(new Error(`The profile "${profile}" isn't defined.`))
       }
-    )
-  })
+
+      exec(
+        `sudo tc filter add dev wlan0 protocol ip parent 1: prio 3 u32 match ip dst ${ip}/32 flowid ${flowID}`,
+        (err) => {
+          if (err) {
+            return reject(err)
+          }
+
+          profileCache[ip] = profile
+
+          resolve()
+        }
+      )
+    })
+  }
+
+  return {
+    getProfile,
+    setProfile
+  }
 }
 
-module.exports = {
-  getProfile,
-  setProfile
-}
+module.exports = createProfileService
