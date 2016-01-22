@@ -8,6 +8,9 @@ const PORT = process.env.PORT || 8080
 
 const app = express()
 
+const error = (code, res) => (e) =>
+  res.status(code).end(e.message)
+
 app.use(bodyParser.json())
 
 app.get(
@@ -15,6 +18,7 @@ app.get(
   (req, res) =>
     deviceService.getDevices()
       .then((devices) => res.json(devices))
+      .catch(error(500 /* Server Error */, res))
 )
 
 app.get(
@@ -29,6 +33,7 @@ app.get(
 
         res.json(device)
       })
+      .catch(error(500 /* Server Error */, res))
 )
 
 app.put(
@@ -46,9 +51,7 @@ app.put(
       .then(() =>
         res.status(204 /* No Content */).end()
       )
-      .catch(() =>
-        res.status(400 /* Bad Request */).end()
-      )
+      .catch(error(400 /* Bad Request */, res))
 
 )
 

@@ -35,7 +35,7 @@ function getActiveClient (mac) {
     .then((clients) => {
       // If a MAC address resolves to more than one DHCP client, then panic!
       if (clients.length > 1) {
-        throw new Error()
+        throw new Error(`MAC ${mac} resolved to more than one DHCP client`)
       }
 
       return clients.length ? clients[0] : null
