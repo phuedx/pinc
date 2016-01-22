@@ -31,7 +31,7 @@ function setProfile (ip, profile) {
       `sudo tc filter add dev wlan0 protocol ip parent 1: prio 3 u32 match ip dst ${ip}/32 flowid ${flowID}`,
       (err) => {
         if (err) {
-          return reject()
+          return reject(err)
         }
 
         profiles[ip] = profile
