@@ -1,10 +1,15 @@
 'use strict'
 
+const CLIENT_LEASES_FILE = process.env.CLIENT_LEASES_FILE || '/var/lib/dhcp/dhcpd.leases'
+const PORT = process.env.PORT || 8080
+
 const express = require('express')
 const bodyParser = require('body-parser')
-const deviceService = require('./src/devices')
+const createDhcpService = require('./src/dhcp')
+const createDeviceService = require('./src/devices')
 
-const PORT = process.env.PORT || 8080
+const dhcpService = createDhcpService(CLIENT_LEASES_FILE)
+const deviceService = createDeviceService(dhcpService)
 
 const app = express()
 
