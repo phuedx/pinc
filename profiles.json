@@ -16,6 +16,11 @@
   },
   {
     "name": "Regular 3G",
+    "bandwidth": "750",
+    "rtt": "100"
+  },
+  {
+    "name": "Good 3G",
     "bandwidth": "1000",
     "rtt": "40"
   },
