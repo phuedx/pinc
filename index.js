@@ -5,6 +5,7 @@ const PROFILES_FILE = `${__dirname}/profiles.json`
 const PORT = process.env.PORT || 8080
 
 const express = require('express')
+const cors = require('cors')
 const bodyParser = require('body-parser')
 const createDhcpService = require('./src/dhcp')
 const createProfileService = require('./src/profiles')
@@ -19,6 +20,7 @@ const app = express()
 const error = (code, res) => (e) =>
   res.status(code).end(e.message)
 
+app.use(cors())
 app.use(bodyParser.json())
 
 app.get(
