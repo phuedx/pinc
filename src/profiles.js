@@ -58,7 +58,8 @@ function createProfileService (profilesFile) {
   return {
     getProfile,
     setProfile,
-    getProfiles
+    getProfiles,
+    NONE
   }
 }
 

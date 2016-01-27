@@ -2,9 +2,12 @@
 
 function createDeviceService (dhcpService, profileService) {
   function createDevice (client) {
+    const profile = profileService.getProfile(client.ip)
+
     return {
       dhcp: client,
-      profile: profileService.getProfile(client.ip)
+      has_profile: profile !== profileService.NONE,
+      profile
     }
   }
 
