@@ -70,6 +70,10 @@ function createProfileService (profilesFile) {
 
   function setProfile (ip, profile) {
     return new Promise((resolve, reject) => {
+      if (getProfile(ip) === profile) {
+        return resolve()
+      }
+
       const flowID = getFlowID(profile)
 
       if (flowID === null) {
