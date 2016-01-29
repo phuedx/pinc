@@ -2,7 +2,7 @@
 
 const readFileSync = require('fs').readFileSync
 const Promise = require('bluebird')
-const exec = require('child_process').exec
+const exec = require('./exec')
 
 const NONE = 'None'
 
@@ -10,12 +10,22 @@ const NONE = 'None'
 // throttling profiles. By basing the "flow ID" at three, we ignore the three default bands.
 const BASE_FLOW_ID = 3
 
+const BASE_HANDLE = 1
+
+//
+const FILTER_HANDLE_MAJOR = 800
+
 function createProfileService (profilesFile) {
   const profiles = JSON.parse(readFileSync(profilesFile))
   let profileCache = {}
+  let handle = BASE_HANDLE
 
   function getProfile (ip) {
-    return profileCache[ip] || NONE
+    if (!profileCache[ip]) {
+      return NONE
+    }
+
+    return profileCache[ip].profile
   }
 
   function getFlowID (profile) {
@@ -28,6 +38,36 @@ function createProfileService (profilesFile) {
     return null
   }
 
+  function createHandle () {
+    return handle++
+  }
+
+  function deleteCurrentFilter (ip) {
+    if (!profileCache[ip]) {
+      return Promise.resolve()
+    }
+
+    const handle = profileCache[ip].handle
+
+    return exec(
+      `sudo tc filter del dev wlan0 protocol ip parent 1: handle ${FILTER_HANDLE_MAJOR}::${handle} prio 3 u32`
+    )
+  }
+
+  function addFilter (ip, profile) {
+    const handle = createHandle()
+    const flowID = getFlowID(profile)
+
+    exec(
+      `sudo tc filter add dev wlan0 protocol ip parent 1: handle ::${handle} prio 3 u32 match ip dst ${ip}/32 flowid ${flowID}`
+    ).then(() => {
+      profileCache[ip] = {
+        profile,
+        handle
+      }
+    })
+  }
+
   function setProfile (ip, profile) {
     return new Promise((resolve, reject) => {
       const flowID = getFlowID(profile)
@@ -36,18 +76,8 @@ function createProfileService (profilesFile) {
         return reject(new Error(`The profile "${profile}" isn't defined.`))
       }
 
-      exec(
-        `sudo tc filter add dev wlan0 protocol ip parent 1: prio 3 u32 match ip dst ${ip}/32 flowid ${flowID}`,
-        (err) => {
-          if (err) {
-            return reject(err)
-          }
-
-          profileCache[ip] = profile
-
-          resolve()
-        }
-      )
+      return deleteCurrentFilter(ip)
+        .then(() => addFilter(ip, profile))
     })
   }
 
