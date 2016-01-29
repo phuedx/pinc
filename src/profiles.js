@@ -51,7 +51,9 @@ function createProfileService (profilesFile) {
 
     return exec(
       `sudo tc filter del dev wlan0 protocol ip parent 1: handle ${FILTER_HANDLE_MAJOR}::${handle} prio 3 u32`
-    )
+    ).then(() => {
+      delete profileCache[ip]
+    })
   }
 
   function addFilter (ip, profile) {
@@ -72,6 +74,10 @@ function createProfileService (profilesFile) {
     return new Promise((resolve, reject) => {
       if (getProfile(ip) === profile) {
         return resolve()
+      }
+
+      if (profile === NONE) {
+        return deleteCurrentFilter(ip)
       }
 
       const flowID = getFlowID(profile)
