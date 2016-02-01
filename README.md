@@ -10,6 +10,12 @@ I work with [the Reading Web née Mobile Web team](https://www.mediawiki.org/wik
 
 ## How?
 
+µDL works by assigning traffic from the device to one of a set of pre-defined schedulers. Each scheduler is a combination of two TC queuing disciplines (qdiscs): a [Token Bucket Filter qdisc](http://lartc.org/howto/lartc.qdisc.classless.html#AEN690) that limits the rate at which packets are sent; and a [netem qdisc](http://www.linuxfoundation.org/collaborate/workgroups/networking/netem) that delays each packet before it is sent.
+
+> N.B. that the schedulers are currently defined immediately after installation (see [`script/setup`](./script/setup)) but there's [an ongoing conversation about how to fix that](https://github.com/phuedx/micro-device-lab/issues/2).
+
+Traffic from a device is assigned to a scheduler by [creating a filter](http://lartc.org/howto/lartc.qdisc.filters.html) that matches traffic from the device's IPv4 address and assigning it to a "flow" that corresponds to the scheduler's first qdisc.
+
 ## Resources
 
 I've referred to the following while piecing together µDL:
@@ -19,6 +25,14 @@ I've referred to the following while piecing together µDL:
 * [netem](http://www.linuxfoundation.org/collaborate/workgroups/networking/netem)
 * [tc Packet Filtering and netem](http://tcn.hypert.net/tcmanual.pdf), which was indispensible when I was fixing [#4: Existing filters aren't deleted](https://github.com/phuedx/micro-device-lab/issues/4)
 
+## Feedback
+
+Your thoughts and comments are, of course, always welcome. In descending order of responsiveness, you can:
+
+* [PM me on IRC](https://webchat.freenode.net/),
+* [create an issue on GitHub](https://github.com/phuedx/micro-device-lab/issues/new), or
+* [tweet at me on Twitter](https://twitter.com/phuedx)
+
 ## License
 
-Micro Device Lab is [MIT-liscensed](./LICENSE).
+Micro Device Lab is [MIT-licensed](./LICENSE).
