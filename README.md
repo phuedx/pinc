@@ -25,7 +25,7 @@ Now that you've got your Raspberry Pi all set up, you can install, setup, and ru
     git clone https://github.com/phuedx/micro-device-lab.git
     cd micro-device-lab
     ./script/setup
-    node index.js
+    ./script/server
 
 ## Resources
 

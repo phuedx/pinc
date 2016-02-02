@@ -5,6 +5,11 @@
     "body-parser": "^1.14.2",
     "cors": "^2.7.1",
     "dhcpd-leases": "0.0.1",
-    "express": "^4.13.3"
+    "express": "^4.13.3",
+    "forever": "^0.15.1"
+  },
+  "scripts": {
+    "start": "forever start --uid \"micro-device-lab\" --append index.js",
+    "stop": "forever stop \"micro-device-lab\""
   }
 }
