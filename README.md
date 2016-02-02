@@ -6,7 +6,7 @@ Micro Device Lab (µDL) is an application I made to help me quickly throttle the
 
 ## Why?
 
-I work with [the Reading Web née Mobile Web team](https://www.mediawiki.org/wiki/Reading/Web) at the [Wikimedia Foundation](https://wikimediafoundation.org) (WMF). The Reading deparment recently had an internal discussion about around how we might better understand users with low-end devices connected to low-bandwidth, unstable mobile networks, somewhat inspired by [Cade Metz's "Facebook Workers Ditch iPhones in Push for World Conquest"](http://www.wired.com/2015/10/facebook-workers-ditch-iphones-in-push-for-world-conquest/). During the discussion [**@dr0ptp4kt**](https://github.com/dr0ptp4kt) mentioned that at the WMF offices in San Francisco there's a wireless network that throttles the network connections of all connected devices to a 2G connection or thereabouts. I, however, nearly always work in London.
+I work with [the Reading Web née Mobile Web team](https://www.mediawiki.org/wiki/Reading/Web) at the [Wikimedia Foundation](https://wikimediafoundation.org) (WMF). The Reading deparment recently had an internal discussion about around how we might better understand users with low-end devices connected to low-bandwidth, unstable mobile networks, somewhat inspired by [Cade Metz's "Facebook Workers Ditch iPhones in Push for World Conquest"](http://www.wired.com/2015/10/facebook-workers-ditch-iphones-in-push-for-world-conquest/). During the discussion [**@dr0ptp4kt**](https://github.com/dr0ptp4kt) mentioned that at the WMF offices in San Francisco there's a wireless network that throttles the network connections of all connected devices to a 2G connection, or thereabouts. I, however, nearly always work in London.
 
 ## How?
 
@@ -15,6 +15,17 @@ I work with [the Reading Web née Mobile Web team](https://www.mediawiki.org/wik
 > N.B. that the profiles are currently created immediately after installation (see [`script/setup`](./script/setup)) but there's [an ongoing conversation about how to fix that](https://github.com/phuedx/micro-device-lab/issues/2).
 
 When a device has its network throttling profile changed, a [TC filter is created](http://lartc.org/howto/lartc.qdisc.filters.html) that matches packets from the device's IPv4 address and assigns them to a "flow" that corresponds to the profiles's first qdisc.
+
+## Getting Started
+
+First and foremost you'll need a Raspberry Pi wireless access point. I followed [Lady Ada's "Setting up a Raspberry Pi as a WiFi access point"](https://learn.adafruit.com/setting-up-a-raspberry-pi-as-a-wifi-access-point) tutorial, which not only tells you how but how to debug common issues as well.
+
+Now that you've got your Raspberry Pi all set up, you can install, setup, and run µDL on it with the following commands:
+
+    git clone https://github.com/phuedx/micro-device-lab.git
+    cd micro-device-lab
+    ./script/setup
+    node index.js
 
 ## Resources
 
