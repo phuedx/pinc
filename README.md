@@ -10,11 +10,11 @@ I work with [the Reading Web née Mobile Web team](https://www.mediawiki.org/wik
 
 ## How?
 
-µDL works by assigning traffic from the device to one of a set of pre-defined schedulers. Each scheduler is a combination of two TC queuing disciplines (qdiscs): a [Token Bucket Filter qdisc](http://lartc.org/howto/lartc.qdisc.classless.html#AEN690) that limits the rate at which packets are sent; and a [netem qdisc](http://www.linuxfoundation.org/collaborate/workgroups/networking/netem) that delays each packet before it is sent.
+µDL works by assigning traffic from the device to one of a set of pre-defined "network throttling profiles". Each profile is a combination of two TC queuing disciplines (qdiscs): a [Token Bucket Filter qdisc](http://lartc.org/howto/lartc.qdisc.classless.html#AEN690) that limits the rate at which packets are sent; and a [netem qdisc](http://www.linuxfoundation.org/collaborate/workgroups/networking/netem) that delays each packet before it is sent.
 
-> N.B. that the schedulers are currently defined immediately after installation (see [`script/setup`](./script/setup)) but there's [an ongoing conversation about how to fix that](https://github.com/phuedx/micro-device-lab/issues/2).
+> N.B. that the profiles are currently created immediately after installation (see [`script/setup`](./script/setup)) but there's [an ongoing conversation about how to fix that](https://github.com/phuedx/micro-device-lab/issues/2).
 
-Traffic from a device is assigned to a scheduler by [creating a filter](http://lartc.org/howto/lartc.qdisc.filters.html) that matches traffic from the device's IPv4 address and assigning it to a "flow" that corresponds to the scheduler's first qdisc.
+When a device has its network throttling profile changed, a [TC filter is created](http://lartc.org/howto/lartc.qdisc.filters.html) that matches packets from the device's IPv4 address and assigns them to a "flow" that corresponds to the profiles's first qdisc.
 
 ## Resources
 
