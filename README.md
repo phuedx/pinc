@@ -1,5 +1,7 @@
 # Micro Device Lab
 
+![An animated gif is worth a thousand words](./README.gif)
+
 ## What?
 
 Micro Device Lab (µDL) is an application I made to help me quickly throttle the network connections of a number of mobile devices that're all connected to a Raspberry Pi wireless access point. The application runs on the Raspberry Pi, creating and deleting traffic control (TC) queuing disciplines and filters to manage round-trip time (RTT) and bandwidth for each device.
