@@ -22,6 +22,8 @@ When a device has its network throttling profile changed, a [TC filter is create
 
 First and foremost you'll need a Raspberry Pi wireless access point. I followed [Lady Ada's "Setting up a Raspberry Pi as a WiFi access point"](https://learn.adafruit.com/setting-up-a-raspberry-pi-as-a-wifi-access-point) tutorial, which not only tells you how but how to debug common issues as well.
 
+Both the µDL service and UI are written in JavaScript. You'll need to download and install [Node.js](https://nodejs.org). Fortunately, the latest stable release of Node.js is available to [download as pre-built ARMv6, ARMv7, or ARMv8 binaries](https://nodejs.org/en/download/stable/). If you're using a Raspberry Pi 1 Model A, Model A+, Model B, or Raspberry Pi Zero, then you should grab the ARMv6 binaries; whereas if, like me, you're using a Raspberry Pi 2 Model B, then you should download the ARMv7 binaries.
+
 Now that you've got your Raspberry Pi all set up, you can install, setup, and run µDL on it with the following commands:
 
     git clone https://github.com/phuedx/micro-device-lab.git
