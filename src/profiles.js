@@ -14,7 +14,10 @@ const BASE_HANDLE = 1
 
 const INTERFACE = 'eth0'
 
-//
+// Filter handles are always of the form "<MAJOR>::<MINOR>". If a handle isn't specified when a
+// filter is created, then MAJOR will default to 800 and MINOR will default to either the last
+// specified number plus one or 800 otherwise. N.B. that we're only ever varying the MINOR part of
+// the filter's handle.
 const FILTER_HANDLE_MAJOR = 800
 
 function createProfileService (profilesFile) {
