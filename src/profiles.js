@@ -12,6 +12,8 @@ const BASE_FLOW_ID = 3
 
 const BASE_HANDLE = 1
 
+const INTERFACE = 'eth0'
+
 //
 const FILTER_HANDLE_MAJOR = 800
 
@@ -50,7 +52,7 @@ function createProfileService (profilesFile) {
     const handle = profileCache[ip].handle
 
     return exec(
-      `sudo tc filter del dev wlan0 protocol ip parent 1: handle ${FILTER_HANDLE_MAJOR}::${handle} prio 3 u32`
+      `sudo tc filter del dev ${INTERFACE} protocol ip parent 1: handle ${FILTER_HANDLE_MAJOR}::${handle} prio 3 u32`
     ).then(() => {
       delete profileCache[ip]
     })
@@ -61,7 +63,7 @@ function createProfileService (profilesFile) {
     const flowID = getFlowID(profile)
 
     exec(
-      `sudo tc filter add dev wlan0 protocol ip parent 1: handle ::${handle} prio 3 u32 match ip dst ${ip}/32 flowid ${flowID}`
+      `sudo tc filter add dev ${INTERFACE} protocol ip parent 1: handle ::${handle} prio 3 u32 match ip dst ${ip}/32 flowid ${flowID}`
     ).then(() => {
       profileCache[ip] = {
         profile,
