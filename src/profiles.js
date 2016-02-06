@@ -2,7 +2,9 @@
 
 const readFileSync = require('fs').readFileSync
 const Promise = require('bluebird')
-const exec = require('./exec')
+const e = require('./exec')
+const exec = e.exec
+const execSync = e.execSync
 
 const NONE = 'None'
 
@@ -100,11 +102,50 @@ function createProfileService (profilesFile) {
     return profiles
   }
 
+  function createFilter (profile, i) {
+    const flowID = i + BASE_FLOW_ID
+    const rate = profile.bandwidth
+    const handleMajor = (i + 1) * 10
+    const delay = profile.rtt
+
+    // Create a Token Bucket Filter (TBF) classless qdisc with the desired maximum rate and a
+    // reasonably low latency.
+    execSync(
+      `sudo tc qdisc add dev ${INTERFACE} parent 1:${flowID} handle ${handleMajor}: tbf rate ${rate}kbit buffer 1600 latency 50ms`
+    )
+    execSync(
+      `sudo tc qdisc add dev ${INTERFACE} parent ${handleMajor}:1 handle ${handleMajor + 1}: netem delay ${delay}ms`
+    )
+  }
+
+  function createFilters () {
+    const bands = profiles.length + BASE_FLOW_ID
+
+    // Delete the root qdisc.
+    try {
+      execSync(`sudo tc qdisc del dev ${INTERFACE} root`)
+    } catch (e) {
+      // `tc` will report that there's a root qdisc when one hasn't been added
+      // but will fail when you try to delete it. This will often be the case after the Raspbeery Pi
+      // has booted.
+    }
+
+    // Add a PRIO classful qdisc with the default priomap as the root qdisc. As well as the
+    // default bands (bands one through three), a band is required for each of the network
+    // throttling profiles.
+    execSync(
+      `sudo tc qdisc add dev ${INTERFACE} root handle 1: prio bands ${bands} priomap 1 2 2 2 1 2 0 0 1 1 1 1 1 1 1 1`
+    )
+
+    profiles.map(createFilter)
+  }
+
   return {
     getProfile,
     setProfile,
     getProfiles,
-    NONE
+    NONE,
+    createFilters
   }
 }
 

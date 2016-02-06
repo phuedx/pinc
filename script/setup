@@ -1,66 +1,9 @@
-#!/bin/sh
+#!/usr/bin/env node
 
-readonly INTERFACE=eth0
+const PROFILES_FILE = `${__dirname}/../profiles.json`
 
-set -e
+const createProfileService = require('../src/profiles')
 
-cd "$(dirname "$0")/.."
+createProfileService(PROFILES_FILE)
+  .createFilters()
 
-script/bootstrap
-
-echo "==> Creating network throttling profiles..."
-
-# Delete the root qdisc. The `|| true` test here is to guard against `tc` reportng a root qdisc on
-# the device but there isn't one (?) and it can be safely added, as it were. This will often be the
-# case after the Raspberry Pi has booted and the default root qdiscs have been added to all devices.
-sudo tc qdisc del dev $INTERFACE root || true
-
-# Add the root qdisc as a PRIO classful qdisc with nine bands and the default priomap. As well as
-# the default bands (bands one through three), an additional six are required, one for each of the
-# network throttling profiles.
-sudo tc qdisc add dev $INTERFACE root handle 1: prio bands 9 priomap 1 2 2 2 1 2 0 0 1 1 1 1 1 1 1 1
-
-# For each of Google Chrome's network throttling profiles: create a Token Bucket Filter (TBF)
-# classless qdisc with the desired maximum rate and a reasonably low latency.
-
-echo "===> GPRS"
-
-# Bandwidth: 50 kb/s
-# RTT: 500 ms
-sudo tc qdisc add dev $INTERFACE parent 1:3 handle 10: tbf rate 50kbit buffer 1600 latency 50ms
-sudo tc qdisc add dev $INTERFACE parent 10:1 handle 11: netem delay 500ms
-
-echo "===> Regular 2G"
-
-# Bandwidth: 250 kb/s
-# RTT: 300 ms
-sudo tc qdisc add dev $INTERFACE parent 1:4 handle 20: tbf rate 250kbit buffer 1600 latency 50ms
-sudo tc qdisc add dev $INTERFACE parent 20:1 handle 21: netem delay 300ms
-
-echo "===> Good 2G"
-
-# Bandwidth: 450 kb/s
-# RTT: 150 ms
-sudo tc qdisc add dev $INTERFACE parent 1:5 handle 25: tbf rate 450kbit buffer 1600 latency 50ms
-sudo tc qdisc add dev $INTERFACE parent 25:1 handle 26: netem delay 150ms
-
-echo "===> Regular 3G"
-
-# Bandwidth: 750 kb/s
-# RTT: 100 ms
-sudo tc qdisc add dev $INTERFACE parent 1:6 handle 30: tbf rate 750kbit buffer 1600 latency 50ms
-sudo tc qdisc add dev $INTERFACE parent 30:1 handle 31: netem delay 100ms
-
-echo "===> Good 3G"
-
-# Bandwidth: 1 Mb/s
-# RTT: 40 ms
-sudo tc qdisc add dev $INTERFACE parent 1:7 handle 35: tbf rate 1Mbit buffer 1600 latency 50ms
-sudo tc qdisc add dev $INTERFACE parent 35:1 handle 36: netem delay 40ms
-
-echo "===> Regular 4G"
-
-# Bandwidth: 4 Mb/s
-# RTT: 20 ms
-sudo tc qdisc add dev $INTERFACE parent 1:8 handle 40: tbf rate 4Mbit buffer 1600 latency 50ms
-sudo tc qdisc add dev $INTERFACE parent 40:1 handle 41: netem delay 20ms

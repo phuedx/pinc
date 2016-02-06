@@ -1,9 +1,9 @@
-const exec = require('child_process').exec
+const childProcess = require('child_process')
 const Promise = require('bluebird')
 
-function promisifiedExec (command) {
+function exec (command) {
   return new Promise((resolve, reject) =>
-    exec(command, (err) => {
+    childProcess.exec(command, (err) => {
       if (err) {
         return reject(err)
       }
@@ -13,4 +13,7 @@ function promisifiedExec (command) {
   )
 }
 
-module.exports = promisifiedExec
+module.exports = {
+  exec,
+  execSync: childProcess.execSync
+}
