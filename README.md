@@ -46,6 +46,10 @@ Your thoughts and comments are, of course, always welcome. In descending order o
 * [create an issue on GitHub](https://github.com/phuedx/micro-device-lab/issues/new), or
 * [tweet at me on Twitter](https://twitter.com/phuedx)
 
+## Shout-outs
+
+I wouldn't have built µDL without [**@joakin**](https://github.com/joakin)'s support and couldn't have without his initial review.
+
 ## License
 
 Micro Device Lab is [MIT-licensed](./LICENSE).
