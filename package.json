@@ -8,8 +8,33 @@
     "express": "^4.13.3",
     "forever": "^0.15.1"
   },
+  "devDependencies": {
+    "babel-core": "^6.4.5",
+    "babel-loader": "^6.2.1",
+    "babel-preset-es2015": "^6.3.13",
+    "babel-preset-react": "^6.3.13",
+    "css-loader": "^0.23.1",
+    "es6-promise": "^3.0.2",
+    "hjs-webpack": "^7.0.0",
+    "isomorphic-fetch": "^2.2.1",
+    "material-ui": "^0.14.2",
+    "postcss-loader": "^0.8.0",
+    "react": "^0.14.6",
+    "react-dom": "^0.14.6",
+    "react-redux": "^4.0.6",
+    "react-tap-event-plugin": "^0.2.1",
+    "redux": "^3.0.6",
+    "redux-logger": "^2.4.0",
+    "redux-thunk": "^1.0.3",
+    "style-loader": "^0.13.0",
+    "webpack-dev-server": "^1.14.1"
+  },
   "scripts": {
     "server:start": "forever start --uid \"micro-device-lab\" --append index.js",
-    "server:stop": "forever stop \"micro-device-lab\""
-  }
+    "server:stop": "forever stop \"micro-device-lab\"",
+    "client:build:watch": "webpack-dev-server",
+    "client:build": "NODE_ENV=production webpack"
+  },
+  "version": "0.2.0",
+  "name": "micro-device-lab"
 }
