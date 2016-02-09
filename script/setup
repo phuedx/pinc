@@ -2,7 +2,7 @@
 
 const PROFILES_FILE = `${__dirname}/../profiles.json`
 
-const createProfileService = require('../src/profiles')
+const createProfileService = require('../src/server/profiles')
 
 createProfileService(PROFILES_FILE)
   .createFilters()

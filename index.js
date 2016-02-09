@@ -7,9 +7,9 @@ const PORT = process.env.PORT || 8080
 const express = require('express')
 const cors = require('cors')
 const bodyParser = require('body-parser')
-const createDhcpService = require('./src/dhcp')
-const createProfileService = require('./src/profiles')
-const createDeviceService = require('./src/devices')
+const createDhcpService = require('./src/server/dhcp')
+const createProfileService = require('./src/server/profiles')
+const createDeviceService = require('./src/server/devices')
 
 const dhcpService = createDhcpService(CLIENT_LEASES_FILE)
 const profileService = createProfileService(PROFILES_FILE)

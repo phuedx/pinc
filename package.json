@@ -9,7 +9,7 @@
     "forever": "^0.15.1"
   },
   "scripts": {
-    "start": "forever start --uid \"micro-device-lab\" --append index.js",
-    "stop": "forever stop \"micro-device-lab\""
+    "server:start": "forever start --uid \"micro-device-lab\" --append index.js",
+    "server:stop": "forever stop \"micro-device-lab\""
   }
 }
