@@ -1,5 +1,4 @@
-const Promise = require('bluebird')
-const readFile = Promise.promisify(require('fs').readFile)
+const readFile = require('fs').readFile
 const parseClientLeases = require('dhcpd-leases')
 
 function createActiveClients (leases) {
@@ -22,8 +21,20 @@ function createActiveClients (leases) {
 }
 
 function createDhcpService (clientLeasesFile) {
+  function getClientLeases() {
+    return new Promise((resolve, reject) => {
+      readFile(clientLeasesFile, 'utf-8', (err, data) => {
+        if (err) {
+          return reject(err)
+        }
+
+        resolve(data)
+      })
+    })
+  }
+
   function getActiveClients () {
-    return readFile(clientLeasesFile, 'utf-8')
+    return getClientLeases()
       .then(parseClientLeases)
       .then(createActiveClients)
   }

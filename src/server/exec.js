@@ -1,7 +1,6 @@
 const NO_EXEC = Boolean(process.env.NO_EXEC)
 
 const childProcess = require('child_process')
-const Promise = require('bluebird')
 
 function exec (command) {
   return new Promise((resolve, reject) =>
