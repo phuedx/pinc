@@ -1,6 +1,7 @@
 'use strict'
 
-const CLIENT_LEASES_FILE = process.env.CLIENT_LEASES_FILE || '/var/lib/dhcp/dhcpd.leases'
+const IS_PROD = process.env.NODE_ENV === 'prod'
+const CLIENT_LEASES_FILE = IS_PROD ? '/var/lib/dhcp/dhcpd.leases' : `${__dirname}/fixtures/dhcpd.leases`
 const PROFILES_FILE = `${__dirname}/profiles.json`
 const PORT = process.env.PORT || 8080
 

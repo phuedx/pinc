@@ -29,8 +29,8 @@
     "webpack-dev-server": "^1.14.1"
   },
   "scripts": {
-    "server:start": "forever start --uid \"micro-device-lab\" --append index.js",
-    "server:start:dev": "CLIENT_LEASES_FILE=fixtures/dhcpd.leases PORT=8081 NO_EXEC=1 forever start --uid \"micro-device-lab-dev\" --append --watch index.js",
+    "server:start": "NODE_ENV=prod forever start --uid \"micro-device-lab\" --append index.js",
+    "server:start:dev": "PORT=8081 NO_EXEC=1 forever start --uid \"micro-device-lab-dev\" --append --watch index.js",
     "server:stop": "forever stop \"micro-device-lab\"",
     "client:build:dev": "webpack-dev-server",
     "client:build": "NODE_ENV=prod webpack",
