@@ -1,0 +1,32 @@
+module.exports = [
+  {
+    name: 'GPRS',
+    bandwidth: 50,
+    rtt: 500
+  },
+  {
+    name: 'Regular 2G',
+    bandwidth: 250,
+    rtt: 300
+  },
+  {
+    name: 'Good 2G',
+    bandwidth: 450,
+    rtt: 150
+  },
+  {
+    name: 'Regular 3G',
+    bandwidth: 750,
+    rtt: 100
+  },
+  {
+    name: 'Good 3G',
+    bandwidth: 1000,
+    rtt: 40
+  },
+  {
+    name: 'Regular 4G',
+    bandwidth: 4000,
+    rtt: 20
+  }
+]

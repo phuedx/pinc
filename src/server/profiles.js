@@ -22,7 +22,7 @@ const INTERFACE = 'eth0'
 const FILTER_HANDLE_MAJOR = 800
 
 function createProfileService (profilesFile) {
-  const profiles = JSON.parse(readFileSync(profilesFile))
+  const profiles = require(profilesFile)
   let profileCache = {}
   let handle = BASE_HANDLE
 
