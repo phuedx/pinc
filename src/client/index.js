@@ -1,4 +1,4 @@
-/* global PRODUCTION */
+/* global IS_PROD */
 
 import React from 'react'
 import injectTapEventPlugin from 'react-tap-event-plugin'
@@ -15,7 +15,7 @@ injectTapEventPlugin()
 
 let middleware = [thunk]
 
-if (!PRODUCTION) {
+if (!IS_PROD) {
   middleware.push(createLogger())
 }
 

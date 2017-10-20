@@ -20,7 +20,7 @@ let config = getConfig({
 
 config.plugins.push(new webpack.DefinePlugin({
   BASE_API_URL: JSON.stringify(BASE_API_URL),
-  PRODUCTION: IS_PROD
+  IS_PROD
 }))
 
 module.exports = config
