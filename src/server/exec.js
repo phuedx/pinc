@@ -1,4 +1,4 @@
-const NO_EXEC = Boolean(process.env.NO_EXEC)
+const IS_PROD = process.env.NODE_ENV === 'prod'
 
 const childProcess = require('child_process')
 
@@ -19,7 +19,7 @@ module.exports = {
   execSync: childProcess.execSync
 }
 
-if (NO_EXEC) {
+if (!IS_PROD) {
   module.exports = {
     exec: () => Promise.resolve(),
     execSync: () => ''
