@@ -30,7 +30,7 @@
   },
   "scripts": {
     "server:start": "NODE_ENV=prod forever start --uid \"micro-device-lab\" --append index.js",
-    "server:start:dev": "PORT=8081 forever start --uid \"micro-device-lab-dev\" --append --watch index.js",
+    "server:start:dev": "PORT=8081 forever start --uid \"micro-device-lab\" --append --watch index.js",
     "server:stop": "forever stop \"micro-device-lab\"",
     "client:build:dev": "webpack-dev-server",
     "client:build": "NODE_ENV=prod webpack",
