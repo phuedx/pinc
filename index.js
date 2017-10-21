@@ -50,21 +50,21 @@ app.get(
 
 app.put(
   '/devices/:mac',
-  (req, res) =>
-    deviceService.getDevice(req.params.mac)
-      .then((device) => {
-        if (!req.body.profile) {
-          return res.status(400) // Bad Request
-            .end()
-        }
+  (req, res) => {
+    if (!req.body.profile) {
+      return res.status(400)
+        .end();
+    }
 
-        return deviceService.setDeviceProfile(device, req.body.profile)
-      })
+    deviceService.getDevice(req.params.mac)
+      .then((device) =>
+        deviceService.setDeviceProfile(device, req.body.profile)
+      )
       .then(() =>
         res.status(204).end() // No Content
       )
       .catch(error(400, res)) // Bad Request
-
+  }
 )
 
 app.get(
