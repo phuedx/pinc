@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-const PROFILES_FILE = `${__dirname}/../profiles.json`
+const PROFILES_FILE = `${__dirname}/../profiles.js`
 
 const createProfileService = require('../src/server/profiles')
 
