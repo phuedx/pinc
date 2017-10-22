@@ -1,6 +1,5 @@
 'use strict'
 
-const readFileSync = require('fs').readFileSync
 const e = require('./exec')
 const exec = e.exec
 const execSync = e.execSync
