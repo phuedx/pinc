@@ -12,7 +12,7 @@ const NONE = 'None'
 // "flow ID" at three, we ignore the three default bands.
 const BASE_FLOW_ID = 3
 
-const BASE_HANDLE = 1
+const BASE_HANDLE_MINOR = 1
 
 const INTERFACE = 'eth0'
 
@@ -25,7 +25,7 @@ const FILTER_HANDLE_MAJOR = 800
 function createProfileService (profilesFile) {
   const profiles = require(profilesFile)
   let profileCache = {}
-  let handle = BASE_HANDLE
+  let handleMinor = BASE_HANDLE_MINOR
 
   function getProfile (ip) {
     if (!profileCache[ip]) {
@@ -45,8 +45,8 @@ function createProfileService (profilesFile) {
     return null
   }
 
-  function createHandle () {
-    return handle++
+  function createHandleMinor () {
+    return handleMinor++
   }
 
   function deleteCurrentFilter (ip) {
@@ -54,25 +54,25 @@ function createProfileService (profilesFile) {
       return Promise.resolve()
     }
 
-    const handle = profileCache[ip].handle
+    const handleMinor = profileCache[ip].handleMinor
 
     return exec(
-      `sudo tc filter del dev ${INTERFACE} protocol ip parent 1: handle ${FILTER_HANDLE_MAJOR}::${handle} prio 3 u32`
+      `sudo tc filter del dev ${INTERFACE} protocol ip parent 1: handle ${FILTER_HANDLE_MAJOR}::${handleMinor} prio 3 u32`
     ).then(() => {
       delete profileCache[ip]
     })
   }
 
   function addFilter (ip, profile) {
-    const handle = createHandle()
+    const handleMinor = createHandleMinor()
     const flowID = getFlowID(profile)
 
     exec(
-      `sudo tc filter add dev ${INTERFACE} protocol ip parent 1: handle ::${handle} prio 3 u32 match ip dst ${ip}/32 flowid ${flowID}`
+      `sudo tc filter add dev ${INTERFACE} protocol ip parent 1: handle ::${handleMinor} prio 3 u32 match ip dst ${ip}/32 flowid ${flowID}`
     ).then(() => {
       profileCache[ip] = {
         profile,
-        handle
+        handleMinor
       }
     })
   }
