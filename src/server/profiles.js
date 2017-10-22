@@ -7,8 +7,9 @@ const execSync = e.execSync
 
 const NONE = 'None'
 
-// The root qdisc is a PRIO classful qdisc with three default bands and six bands for the network
-// throttling profiles. By basing the "flow ID" at three, we ignore the three default bands.
+// The root qdisc is a PRIO classful qdisc with three default bands and an
+// additional band for each of the network throttling profiles. By basing the
+// "flow ID" at three, we ignore the three default bands.
 const BASE_FLOW_ID = 3
 
 const BASE_HANDLE = 1
