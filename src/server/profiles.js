@@ -13,7 +13,7 @@ const BASE_FLOW_ID = 3
 
 const BASE_HANDLE_MINOR = 1
 
-const INTERFACE = 'eth0'
+const EGRESS_INTERFACE = 'eth0'
 
 // Filter handles are always of the form "<MAJOR>::<MINOR>". If a handle isn't specified when a
 // filter is created, then MAJOR will default to 800 and MINOR will default to either the last
@@ -56,7 +56,7 @@ function createProfileService (profilesFile) {
     const handleMinor = profileCache[ip].handleMinor
 
     return exec(
-      `sudo tc filter del dev ${INTERFACE} protocol ip parent 1: handle ${FILTER_HANDLE_MAJOR}::${handleMinor} prio 3 u32`
+      `sudo tc filter del dev ${EGRESS_INTERFACE} protocol ip parent 1: handle ${FILTER_HANDLE_MAJOR}::${handleMinor} prio 3 u32`
     ).then(() => {
       delete profileCache[ip]
     })
@@ -67,7 +67,7 @@ function createProfileService (profilesFile) {
     const flowID = getFlowID(profile)
 
     exec(
-      `sudo tc filter add dev ${INTERFACE} protocol ip parent 1: handle ::${handleMinor} prio 3 u32 match ip dst ${ip}/32 flowid ${flowID}`
+      `sudo tc filter add dev ${EGRESS_INTERFACE} protocol ip parent 1: handle ::${handleMinor} prio 3 u32 match ip dst ${ip}/32 flowid ${flowID}`
     ).then(() => {
       profileCache[ip] = {
         profile,
@@ -110,10 +110,10 @@ function createProfileService (profilesFile) {
     // Create a Token Bucket Filter (TBF) classless qdisc with the desired maximum rate and a
     // reasonably low latency.
     execSync(
-      `sudo tc qdisc add dev ${INTERFACE} parent 1:${flowID} handle ${handleMajor}: tbf rate ${rate}kbit buffer 1600 latency 50ms`
+      `sudo tc qdisc add dev ${EGRESS_INTERFACE} parent 1:${flowID} handle ${handleMajor}: tbf rate ${rate}kbit buffer 1600 latency 50ms`
     )
     execSync(
-      `sudo tc qdisc add dev ${INTERFACE} parent ${handleMajor}:1 handle ${handleMajor + 1}: netem delay ${delay}ms`
+      `sudo tc qdisc add dev ${EGRESS_INTERFACE} parent ${handleMajor}:1 handle ${handleMajor + 1}: netem delay ${delay}ms`
     )
   }
 
@@ -122,7 +122,7 @@ function createProfileService (profilesFile) {
 
     // Delete the root qdisc.
     try {
-      execSync(`sudo tc qdisc del dev ${INTERFACE} root`)
+      execSync(`sudo tc qdisc del dev ${EGRESS_INTERFACE} root`)
     } catch (e) {
       // `tc` will report that there's a root qdisc when one hasn't been added
       // but will fail when you try to delete it. This will often be the case after the Raspbeery Pi
@@ -133,7 +133,7 @@ function createProfileService (profilesFile) {
     // default bands (bands one through three), a band is required for each of the network
     // throttling profiles.
     execSync(
-      `sudo tc qdisc add dev ${INTERFACE} root handle 1: prio bands ${bands} priomap 1 2 2 2 1 2 0 0 1 1 1 1 1 1 1 1`
+      `sudo tc qdisc add dev ${EGRESS_INTERFACE} root handle 1: prio bands ${bands} priomap 1 2 2 2 1 2 0 0 1 1 1 1 1 1 1 1`
     )
 
     profiles.map(createFilter)
