@@ -12,7 +12,7 @@ let config = getConfig({
   html: (context) => {
     return {
       'index.html': context.defaultTemplate({
-        title: 'Micro Device Lab'
+        title: 'PiNC'
       })
     }
   }

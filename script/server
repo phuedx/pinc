@@ -4,5 +4,5 @@ set -e
 
 cd "$(dirname "$0")/.."
 
-echo "==> Starting µDL..."
+echo "==> Starting PiNC..."
 npm run server:start

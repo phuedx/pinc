@@ -34,8 +34,8 @@ module.exports = [
   // networks in the UK in 2015
   // (see http://stakeholders.ofcom.org.uk/market-data-research/other/telecoms-research/broadband-speeds/mobile-bb-april-15/).
   //
-  // Currently, µDL doesn't support configuring download and upload bandwidth.
-  // As it's more likely that the user is downloading via µDL, use the download
+  // Currently, PiNC doesn't support configuring download and upload bandwidth.
+  // As it's more likely that the user is downloading via PiNC, use the download
   // bandwidth.
   {
     name: '4G (UK)',

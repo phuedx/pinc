@@ -38,7 +38,7 @@ const App = ({
 }) => (
   <div>
     <AppBar
-      title='Micro Device Lab'
+      title='PiNC'
       showMenuIconButton={false}
       iconElementRight={
         <IconButton disabled={isRefreshing} onTouchTap={refresh}><ActionCached /></IconButton>

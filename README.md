@@ -1,10 +1,10 @@
-# Micro Device Lab
+# Pi Network Conditioner
 
 ![An animated gif is worth a thousand words](./README.gif)
 
 ## What?
 
-Micro Device Lab (µDL) is an application I made to help me quickly throttle the network connections of a number of mobile devices that're all connected to a Raspberry Pi wireless access point. The application runs on the Raspberry Pi, creating and deleting traffic control (TC) queuing disciplines and filters to manage round-trip time (RTT) and bandwidth for each device.
+Pi Network Conditioner (PiNC) is an application I made to help me quickly throttle the network connections of a number of mobile devices that're all connected to a Raspberry Pi wireless access point. The application runs on the Raspberry Pi, creating and deleting traffic control (TC) queuing disciplines and filters to manage round-trip time (RTT) and bandwidth for each device.
 
 ## Why?
 
@@ -12,7 +12,7 @@ I work with [the Reading Web née Mobile Web team](https://www.mediawiki.org/wik
 
 ## How?
 
-µDL works by assigning traffic from the device to one of a set of pre-defined "network throttling profiles". Each profile is a combination of two TC queuing disciplines (qdiscs): a [Token Bucket Filter qdisc](http://lartc.org/howto/lartc.qdisc.classless.html#AEN690) that limits the rate at which packets are sent; and a [netem qdisc](http://www.linuxfoundation.org/collaborate/workgroups/networking/netem) that delays each packet before it is sent.
+PiNC works by assigning traffic from the device to one of a set of pre-defined "network throttling profiles". Each profile is a combination of two TC queuing disciplines (qdiscs): a [Token Bucket Filter qdisc](http://lartc.org/howto/lartc.qdisc.classless.html#AEN690) that limits the rate at which packets are sent; and a [netem qdisc](http://www.linuxfoundation.org/collaborate/workgroups/networking/netem) that delays each packet before it is sent.
 
 When a device has its network throttling profile changed, a [TC filter is created](http://lartc.org/howto/lartc.qdisc.filters.html) that matches packets from the device's IPv4 address and assigns them to a "flow" that corresponds to the profiles's first qdisc.
 
@@ -20,37 +20,37 @@ When a device has its network throttling profile changed, a [TC filter is create
 
 First and foremost you'll need a Raspberry Pi wireless access point. [Download a Raspbian Jessie Lite image](https://www.raspberrypi.org/downloads/raspbian/) and [write it to an SD card](https://www.raspberrypi.org/documentation/installation/installing-images/); then follow [Lady Ada's "Setting up a Raspberry Pi as a WiFi access point"](https://learn.adafruit.com/setting-up-a-raspberry-pi-as-a-wifi-access-point) tutorial, which not only tells you how but how to debug common issues as well.
 
-Both the µDL service and UI are written in JavaScript. You'll need to download and install [Node.js](https://nodejs.org). Fortunately, the latest stable release of Node.js (LTS) is available to [download as pre-built ARMv6, ARMv7, or ARMv8 binaries](https://nodejs.org/en/download/). If you're using a Raspberry Pi 1 Model A, Model A+, Model B, or Raspberry Pi Zero, then you should grab the ARMv6 binaries; whereas if, like me, you're using a Raspberry Pi 2 Model B, then you should download the ARMv7 binaries.
+Both the PiNC service and UI are written in JavaScript. You'll need to download and install [Node.js](https://nodejs.org). Fortunately, the latest stable release of Node.js (LTS) is available to [download as pre-built ARMv6, ARMv7, or ARMv8 binaries](https://nodejs.org/en/download/). If you're using a Raspberry Pi 1 Model A, Model A+, Model B, or Raspberry Pi Zero, then you should grab the ARMv6 binaries; whereas if, like me, you're using a Raspberry Pi 2 Model B, then you should download the ARMv7 binaries.
 
-Now that you've got your Raspberry Pi all set up, you can install, setup, and run µDL on it with the following commands:
+Now that you've got your Raspberry Pi all set up, you can install, setup, and run PiNC on it with the following commands:
 
-    git clone https://github.com/phuedx/micro-device-lab.git
-    cd micro-device-lab
+    git clone https://github.com/phuedx/pinc.git
+    cd pinc
     ./script/bootstrap
     ./script/setup
     ./script/server
 
 ## Resources
 
-I've referred to the following while piecing together µDL:
+I've referred to the following while piecing together PiNC:
 
 * [tc(8)](http://man7.org/linux/man-pages/man8/tc.8.html)
 * [Linux Advanced Routing & Traffic Control HOWTO](http://lartc.org/howto/index.html)
 * [netem](http://www.linuxfoundation.org/collaborate/workgroups/networking/netem)
-* [tc Packet Filtering and netem](http://tcn.hypert.net/tcmanual.pdf), which was indispensible when I was fixing [#4: Existing filters aren't deleted](https://github.com/phuedx/micro-device-lab/issues/4)
+* [tc Packet Filtering and netem](http://tcn.hypert.net/tcmanual.pdf), which was indispensible when I was fixing [#4: Existing filters aren't deleted](https://github.com/phuedx/pinc/issues/4)
 
 ## Feedback
 
 Your thoughts and comments are, of course, always welcome. In descending order of responsiveness, you can:
 
 * [PM me on IRC](https://webchat.freenode.net/),
-* [create an issue on GitHub](https://github.com/phuedx/micro-device-lab/issues/new), or
+* [create an issue on GitHub](https://github.com/phuedx/pinc/issues/new), or
 * [tweet at me on Twitter](https://twitter.com/phuedx)
 
 ## Shout-outs
 
-I wouldn't have built µDL without [**@joakin**](https://github.com/joakin)'s support and couldn't have without his initial review.
+I wouldn't have built PiNC without [**@joakin**](https://github.com/joakin)'s support and couldn't have without his initial review.
 
 ## License
 
-Micro Device Lab is [MIT-licensed](./LICENSE).
+PiNC is [MIT-licensed](./LICENSE).
