@@ -28,8 +28,8 @@
     "style-loader": "^0.19.0"
   },
   "scripts": {
-    "server:start": "NODE_ENV=prod forever start --uid \"pinc\" --append index.js",
-    "server:start:dev": "PORT=8081 forever start --uid \"pinc\" --append --watch index.js",
+    "server:start": "NODE_ENV=prod forever start --uid \"pinc\" --append src/server/",
+    "server:start:dev": "PORT=8081 forever start --uid \"pinc\" --append --watch src/server/",
     "server:stop": "forever stop \"pinc\"",
     "client:build:dev": "hjs-dev-server",
     "client:build": "NODE_ENV=prod webpack",

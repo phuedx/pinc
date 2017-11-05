@@ -1,16 +1,16 @@
 'use strict'
 
-const IS_PROD = require('./src/server/is_prod')
-const CLIENT_LEASES_FILE = IS_PROD ? '/var/lib/dhcp/dhcpd.leases' : `${__dirname}/fixtures/dhcpd.leases`
-const PROFILES_FILE = `${__dirname}/profiles.js`
+const IS_PROD = require('./is_prod')
+const CLIENT_LEASES_FILE = IS_PROD ? '/var/lib/dhcp/dhcpd.leases' : `${__dirname}/../../fixtures/dhcpd.leases`
+const PROFILES_FILE = `${__dirname}/../../profiles.js`
 const PORT = process.env.PORT || 8080
 
 const express = require('express')
 const cors = require('cors')
 const bodyParser = require('body-parser')
-const createDhcpService = require('./src/server/dhcp')
-const createProfileService = require('./src/server/profiles')
-const createDeviceService = require('./src/server/devices')
+const createDhcpService = require('./dhcp')
+const createProfileService = require('./profiles')
+const createDeviceService = require('./devices')
 
 const dhcpService = createDhcpService(CLIENT_LEASES_FILE)
 const profileService = createProfileService(PROFILES_FILE)
