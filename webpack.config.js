@@ -15,7 +15,8 @@ let config = getConfig({
         title: 'PiNC'
       })
     }
-  }
+  },
+  clearBeforeBuild: true
 })
 
 config.plugins.push(new webpack.DefinePlugin({
