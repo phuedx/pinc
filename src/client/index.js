@@ -2,7 +2,7 @@
 
 import React from 'react'
 import injectTapEventPlugin from 'react-tap-event-plugin'
-import createLogger from 'redux-logger'
+import { createLogger } from 'redux-logger'
 import { createStore, applyMiddleware } from 'redux'
 import thunk from 'redux-thunk'
 import reducer from './reducers'
