@@ -1,9 +1,7 @@
-#!/usr/bin/env node
+#!/bin/sh
 
-const PROFILES_FILE = `${__dirname}/../profiles.js`
+set -e
 
-const createProfileService = require('../src/server/profiles')
+cd "$(dirname "$0")/.."
 
-createProfileService(PROFILES_FILE)
-  .createFilters()
-
+NODE_ENV=prod node ./script/setup.js
