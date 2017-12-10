@@ -66,7 +66,7 @@ function createProfileService (profilesFile) {
     const handleMinor = createHandleMinor()
     const flowID = getFlowID(profile)
 
-    exec(
+    return exec(
       `sudo tc filter add dev ${EGRESS_INTERFACE} protocol ip parent 1: handle ::${handleMinor} prio 3 u32 match ip dst ${ip}/32 flowid ${flowID}`
     ).then(() => {
       profileCache[ip] = {
@@ -77,24 +77,22 @@ function createProfileService (profilesFile) {
   }
 
   function setProfile (ip, profile) {
-    return new Promise((resolve, reject) => {
-      if (getProfile(ip) === profile) {
-        return resolve()
-      }
+    if (getProfile(ip) === profile) {
+      return Promise.resolve()
+    }
 
-      if (profile === NONE) {
-        return deleteCurrentFilter(ip)
-      }
-
-      const flowID = getFlowID(profile)
-
-      if (flowID === null) {
-        return reject(new Error(`The profile "${profile}" isn't defined.`))
-      }
-
+    if (profile === NONE) {
       return deleteCurrentFilter(ip)
-        .then(() => addFilter(ip, profile))
-    })
+    }
+
+    const flowID = getFlowID(profile)
+
+    if (flowID === null) {
+      return Promise.reject(new Error(`The profile "${profile}" isn't defined.`))
+    }
+
+    return deleteCurrentFilter(ip)
+      .then(() => addFilter(ip, profile))
   }
 
   function getProfiles () {

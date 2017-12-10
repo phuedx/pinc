@@ -22,7 +22,7 @@ function createDeviceService (dhcpService, profileService) {
   }
 
   function setDeviceProfile (device, profile) {
-    profileService.setProfile(device.dhcp.ip, profile)
+    return profileService.setProfile(device.dhcp.ip, profile)
   }
 
   return {
