@@ -48,15 +48,32 @@ function createProfileService (profilesFile) {
     return handleMinor++
   }
 
+  function formatHandle (major, minor) {
+    let result = ''
+
+    if (major) {
+      result += major.toString(16)
+    }
+
+    result += ':'
+
+    if (minor) {
+      result += minor.toString(16)
+    }
+
+    return result
+  }
+
   function deleteCurrentFilter (ip) {
     if (!profileCache[ip]) {
       return Promise.resolve()
     }
 
     const handleMinor = profileCache[ip].handleMinor
+    const handle = formatHandle(FILTER_HANDLE_MAJOR, handleMinor)
 
     return exec(
-      `sudo tc filter del dev ${EGRESS_INTERFACE} protocol ip parent 1: handle ${FILTER_HANDLE_MAJOR}::${handleMinor} prio 3 u32`
+      `sudo tc filter del dev ${EGRESS_INTERFACE} protocol ip parent 1: handle ${handle} prio 3 u32`
     ).then(() => {
       delete profileCache[ip]
     })
@@ -65,9 +82,10 @@ function createProfileService (profilesFile) {
   function addFilter (ip, profile) {
     const handleMinor = createHandleMinor()
     const flowID = getFlowID(profile)
+    const handle = formatHandle(undefined, handleMinor)
 
     return exec(
-      `sudo tc filter add dev ${EGRESS_INTERFACE} protocol ip parent 1: handle ::${handleMinor} prio 3 u32 match ip dst ${ip}/32 flowid ${flowID}`
+      `sudo tc filter add dev ${EGRESS_INTERFACE} protocol ip parent 1: handle ${handle} prio 3 u32 match ip dst ${ip}/32 flowid ${flowID}`
     ).then(() => {
       profileCache[ip] = {
         profile,
@@ -101,17 +119,25 @@ function createProfileService (profilesFile) {
 
   function createFilter (profile, i) {
     const flowID = i + BASE_FLOW_ID
-    const rate = profile.bandwidth
+    let parentHandle = formatHandle(1, flowID)
+
     const handleMajor = (i + 1) * 10
+    let handle = formatHandle(handleMajor)
+
+    const rate = profile.bandwidth
     const delay = profile.rtt
 
     // Create a Token Bucket Filter (TBF) classless qdisc with the desired maximum rate and a
     // reasonably low latency.
     execSync(
-      `sudo tc qdisc add dev ${EGRESS_INTERFACE} parent 1:${flowID} handle ${handleMajor}: tbf rate ${rate}kbit buffer 1600 latency 50ms`
+      `sudo tc qdisc add dev ${EGRESS_INTERFACE} parent ${parentHandle} handle ${handle} tbf rate ${rate}kbit buffer 1600 latency 50ms`
     )
+
+    parentHandle = handle
+    handle = formatHandle(handleMajor + 1)
+
     execSync(
-      `sudo tc qdisc add dev ${EGRESS_INTERFACE} parent ${handleMajor}:1 handle ${handleMajor + 1}: netem delay ${delay}ms`
+      `sudo tc qdisc add dev ${EGRESS_INTERFACE} parent ${parentHandle} handle ${handle} netem delay ${delay}ms`
     )
   }
 
