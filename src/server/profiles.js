@@ -157,7 +157,7 @@ function createProfileService (profilesFile) {
     // default bands (bands one through three), a band is required for each of the network
     // throttling profiles.
     execSync(
-      `sudo tc qdisc add dev ${EGRESS_INTERFACE} root handle 1: prio bands ${bands} priomap 1 2 2 2 1 2 0 0 1 1 1 1 1 1 1 1`
+      `sudo tc qdisc add dev ${EGRESS_INTERFACE} root handle 1: prio bands ${bands}`
     )
 
     profiles.map(createFilter)
